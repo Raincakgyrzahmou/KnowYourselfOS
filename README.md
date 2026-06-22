@@ -1,3 +1,7 @@
+
+
+https://github.com/user-attachments/assets/af775887-4cab-4742-b301-e1b02f439cb5
+
 <div align="center">
 
 <img src="docs/social-preview.png" alt="Know Yourself OS — Are you really happy? Know yourself and be honest." width="100%">
