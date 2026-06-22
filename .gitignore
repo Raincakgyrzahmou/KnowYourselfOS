@@ -1,0 +1,16 @@
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Local notes / secrets (never commit an API key)
+.env
+.env.*
+*.local
+secrets*
+my-notes*
+
+# Dependencies (this project has none — keep it that way)
+node_modules/
