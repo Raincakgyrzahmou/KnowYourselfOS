@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Know Yourself OS · 多研究你自己</title>
+<style>
+  :root{
+    color-scheme:dark;
+    --bg:#0e0f13; --bg2:#15171d; --card:#1a1d25; --card2:#20242e;
+    --line:#2a2f3a; --txt:#e9e6e1; --dim:#9aa0ab; --faint:#6b7280;
+    --accent:#e8a94b; --accent2:#e0735e; --good:#7bbf8f; --calm:#7aa7d9;
+    --rad:14px; --mono:'SF Mono',ui-monospace,Menlo,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'PingFang SC','Microsoft YaHei',sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;min-height:100%;background:var(--bg)}
+  body{color:var(--txt);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent)}
+  .wrap{display:flex;min-height:100vh}
+
+  .side{width:262px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--line);
+    position:sticky;top:0;height:100vh;overflow-y:auto;padding:22px 14px}
+  .brand{font-size:18px;font-weight:700;letter-spacing:.3px;margin-bottom:2px;padding:0 8px}
+  .brand small{display:block;font-weight:400;color:var(--accent);font-size:12.5px;margin-top:2px}
+  .navitem{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:10px;cursor:pointer;
+    color:var(--dim);font-size:13.5px;margin-bottom:2px;border:1px solid transparent;transition:.15s}
+  .navitem:hover{background:var(--card);color:var(--txt)}
+  .navitem.active{background:var(--card2);color:var(--txt);border-color:var(--line)}
+  .navitem .ic{font-size:15px;width:20px;text-align:center}
+  .navitem .pct{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--faint)}
+  .navitem.active .pct{color:var(--accent)}
+  .navitem.reset{color:var(--accent2);border-color:rgba(224,115,94,.3)}
+  .navitem.reset:hover{background:rgba(224,115,94,.1)}
+  .navsection{color:var(--faint);font-size:10px;text-transform:uppercase;letter-spacing:1.4px;margin:15px 10px 7px}
+
+  .main{flex:1;max-width:880px;margin:0 auto;padding:30px 44px 120px;width:100%}
+  .topbar{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+  .overallbar{flex:1;height:6px;background:var(--card);border-radius:99px;overflow:hidden}
+  .overallbar > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:.5s}
+  .overalllabel{font-family:var(--mono);font-size:11px;color:var(--dim);white-space:nowrap}
+  .aibadge{font-size:10.5px;font-family:var(--mono);padding:3px 8px;border-radius:99px;white-space:nowrap;cursor:pointer}
+  .aibadge.on{color:var(--good);border:1px solid rgba(123,191,143,.4);background:rgba(123,191,143,.08)}
+  .aibadge.off{color:var(--faint);border:1px solid var(--line)}
+
+  h1{font-size:25px;margin:0 0 4px;font-weight:700}
+  .sub{color:var(--dim);font-size:14px;margin-bottom:22px}
+  .pillarhead{display:flex;align-items:center;gap:14px;margin:6px 0 4px}
+  .pillarhead .emoji{font-size:30px}
+  .pillarhead h1{font-size:23px;margin:0}
+  .pillarhead .cn{color:var(--accent);font-size:14px;font-weight:500}
+  .pillarintro{color:var(--dim);font-size:14px;margin:8px 0 20px;border-left:2px solid var(--accent);padding-left:14px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);padding:18px 20px;margin-bottom:16px}
+  .q .qnum{font-family:var(--mono);font-size:11px;color:var(--accent);margin-bottom:7px;letter-spacing:.5px}
+  .q .qen{font-size:15.5px;font-weight:600;margin-bottom:3px}
+  .q .qcn{color:var(--dim);font-size:13px;margin-bottom:12px}
+  textarea,input[type=text],input[type=password]{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;color:var(--txt);
+    font-family:var(--sans);font-size:14px;padding:11px 13px;resize:vertical;line-height:1.5;transition:.15s}
+  textarea{min-height:60px}
+  textarea:focus,input:focus{outline:none;border-color:var(--accent);background:#101218}
+  .saved{font-size:10.5px;color:var(--good);opacity:0;transition:.3s;font-family:var(--mono);margin-top:6px;display:inline-block;height:12px}
+  .saved.show{opacity:1}
+
+  .distill{background:linear-gradient(135deg,rgba(232,169,75,.09),rgba(224,115,94,.06));
+    border:1px solid rgba(232,169,75,.35);border-radius:var(--rad);padding:18px 20px;margin:22px 0 14px}
+  .distill .lab{font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+  .distill .hint,.experiment .hint{color:var(--dim);font-size:12.5px;margin-bottom:11px}
+  .experiment{background:rgba(123,191,143,.07);border:1px solid rgba(123,191,143,.3);border-radius:var(--rad);padding:18px 20px;margin-bottom:14px}
+  .experiment .lab{font-size:12px;font-weight:700;color:var(--good);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+
+  .genrow{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+  .genbtn{display:inline-flex;align-items:center;gap:7px;background:var(--card2);border:1px solid var(--line);
+    color:var(--txt);padding:8px 14px;border-radius:9px;cursor:pointer;font-size:12.5px;font-weight:600;font-family:var(--sans);transition:.15s}
+  .genbtn.gold{border-color:rgba(232,169,75,.5);color:var(--accent)}
+  .genbtn.gold:hover{background:rgba(232,169,75,.12)}
+  .genbtn.green{border-color:rgba(123,191,143,.5);color:var(--good)}
+  .genbtn.green:hover{background:rgba(123,191,143,.12)}
+  .genbtn.calm{border-color:rgba(122,167,217,.5);color:var(--calm)}
+  .genbtn.calm:hover{background:rgba(122,167,217,.12)}
+  .genbtn:disabled{opacity:.5;cursor:default}
+  .genstate{font-size:11.5px;color:var(--dim);font-family:var(--mono)}
+  .genstate.err{color:var(--accent2)}
+  .spin{width:13px;height:13px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:sp .7s linear infinite;display:inline-block}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .aiflag{font-size:10px;font-family:var(--mono);color:var(--accent);opacity:.8;margin-left:6px}
+
+  .btn{background:var(--card2);border:1px solid var(--line);color:var(--txt);padding:11px 18px;border-radius:10px;
+    cursor:pointer;font-size:13.5px;font-family:var(--sans);transition:.15s;font-weight:500}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{background:var(--accent);color:#1a1206;border-color:var(--accent);font-weight:600}
+  .btn.primary:hover{background:#f0b85e}
+  .btn:disabled{opacity:.35;cursor:default}
+  .btn.ghost{background:transparent}
+  .pillarnav{display:flex;justify-content:space-between;margin-top:28px;gap:12px}
+  .rowbtns{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 18px}
+
+  /* dashboards */
+  .greet{font-size:22px;font-weight:700;margin-bottom:2px}
+  .greetsub{color:var(--dim);font-size:13px;margin-bottom:20px}
+  .northstar{background:linear-gradient(135deg,rgba(232,169,75,.12),rgba(224,115,94,.05));border:1px solid rgba(232,169,75,.3);
+    border-radius:var(--rad);padding:16px 20px;margin-bottom:16px}
+  .northstar .lab{font-size:10.5px;text-transform:uppercase;letter-spacing:1.3px;color:var(--accent);margin-bottom:5px}
+  .northstar .stmt{font-size:15.5px;line-height:1.55;font-style:italic}
+  .identity{color:var(--calm);font-size:13.5px;margin-top:8px}
+  .blocklab{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--dim);margin:4px 0 10px;display:flex;align-items:center;gap:8px}
+  .scalerow{display:flex;align-items:center;gap:6px;margin:4px 0 14px;flex-wrap:wrap}
+  .scalerow .lab{font-size:13px;color:var(--dim);width:150px}
+  .dot{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--dim);
+    cursor:pointer;font-size:12px;font-family:var(--mono);transition:.12s;display:flex;align-items:center;justify-content:center}
+  .dot:hover{border-color:var(--accent)}
+  .dot.on{background:var(--accent);color:#1a1206;border-color:var(--accent);font-weight:700}
+  .streakpill{display:inline-flex;gap:7px;align-items:center;background:var(--card2);border:1px solid var(--line);
+    border-radius:99px;padding:5px 13px;font-size:12.5px;color:var(--accent);font-weight:600}
+  .checkline{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;font-size:14.5px}
+  .checkline .box{width:20px;height:20px;border:1px solid var(--line);border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;color:transparent}
+  .checkline.done .box{background:var(--good);border-color:var(--good);color:#0e0f13}
+  .checkline.done .t{text-decoration:line-through;color:var(--faint)}
+  .memory{background:rgba(122,167,217,.08);border:1px solid rgba(122,167,217,.3);border-radius:var(--rad);padding:15px 18px;margin-bottom:16px}
+  .memory .lab{font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px;color:var(--calm);margin-bottom:6px}
+  .memory .txt{font-size:14px;line-height:1.55}
+  .memory .dt{font-family:var(--mono);font-size:11px;color:var(--faint);margin-top:6px}
+
+  /* reset */
+  .resetstep{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);padding:18px 20px;margin-bottom:14px}
+  .resetstep h3{margin:0 0 8px;font-size:15px;display:flex;align-items:center;gap:9px}
+  .resetstep .n{width:24px;height:24px;border-radius:50%;background:var(--card2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:12px;font-family:var(--mono);color:var(--calm);flex-shrink:0}
+  .yourwords{background:var(--bg);border-left:2px solid var(--calm);padding:8px 13px;border-radius:0 8px 8px 0;margin:8px 0;font-size:13.5px;color:var(--txt)}
+  .yourwords .src{display:block;font-size:10.5px;color:var(--faint);font-family:var(--mono);margin-bottom:3px}
+  .breathe{width:90px;height:90px;border-radius:50%;margin:6px auto 4px;background:radial-gradient(circle,rgba(122,167,217,.35),rgba(122,167,217,.05));
+    border:1px solid rgba(122,167,217,.4);animation:breathe 8s ease-in-out infinite;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--calm)}
+  @keyframes breathe{0%,100%{transform:scale(.7)}50%{transform:scale(1.05)}}
+  .reframe{background:rgba(123,191,143,.06);border:1px solid rgba(123,191,143,.25);border-radius:10px;padding:14px 16px;margin-top:10px;font-size:14.5px;line-height:1.6}
+  .careline{color:var(--faint);font-size:12px;margin-top:8px;line-height:1.55}
+
+  /* tiles / profile */
+  .heroquote{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);padding:22px 24px;margin-bottom:18px;font-style:italic;font-size:14.5px;line-height:1.7}
+  .heroquote .by{display:block;font-style:normal;color:var(--accent);margin-top:10px;font-size:13px}
+  .howto{background:var(--card2);border:1px dashed var(--line);border-radius:var(--rad);padding:15px 19px;margin-bottom:20px;font-size:13px;color:var(--dim)}
+  .howto b{color:var(--txt)}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+  .tile{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);padding:16px;cursor:pointer;transition:.15s;display:flex;gap:13px;align-items:flex-start}
+  .tile:hover{border-color:var(--accent);transform:translateY(-2px)}
+  .tile .te{font-size:24px}
+  .tile .tt{font-weight:600;font-size:14.5px}
+  .tile .tc{color:var(--accent);font-size:11.5px;margin-bottom:3px}
+  .tile .td{color:var(--dim);font-size:12px;margin-top:4px}
+  .tile .mini{height:4px;background:var(--bg);border-radius:9px;margin-top:9px;overflow:hidden}
+  .tile .mini > i{display:block;height:100%;background:var(--accent);width:0;transition:.4s}
+
+  /* journal */
+  .jentry{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);padding:15px 18px;margin-bottom:11px}
+  .jentry .meta{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+  .jtype{font-size:10.5px;font-family:var(--mono);padding:2px 7px;border-radius:99px;border:1px solid var(--line)}
+  .jtype.happy{color:var(--accent);border-color:rgba(232,169,75,.4)}
+  .jtype.note{color:var(--calm);border-color:rgba(122,167,217,.4)}
+  .jentry .dt{font-family:var(--mono);font-size:11px;color:var(--faint)}
+  .jentry .jtxt{font-size:14px;line-height:1.55;white-space:pre-wrap}
+  .jentry .tools{margin-left:auto;display:flex;gap:6px}
+  .ibtn{cursor:pointer;font-size:13px;color:var(--faint);background:none;border:none;padding:2px 5px}
+  .ibtn:hover{color:var(--accent)}
+  .ibtn.pinned{color:var(--accent)}
+
+  /* this week */
+  .weeksummary{background:linear-gradient(135deg,rgba(232,169,75,.1),rgba(123,191,143,.06));border:1px solid rgba(232,169,75,.3);
+    border-radius:var(--rad);padding:18px 22px;margin-bottom:18px;font-size:15px;line-height:1.6}
+  .weekrange{font-family:var(--mono);font-size:12px;color:var(--dim);margin-bottom:14px}
+  .sech{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin:22px 0 10px}
+  .sech.green{color:var(--good)}
+  .daycard{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);padding:14px 18px;margin-bottom:11px}
+  .daycard h4{margin:0 0 6px;font-size:14px;color:var(--accent);display:flex;justify-content:space-between;align-items:baseline}
+  .daycard h4 .dt{font-family:var(--mono);font-size:11px;color:var(--faint);font-weight:400}
+  .slot{display:flex;gap:12px;padding:7px 0;border-top:1px solid var(--line);font-size:13.5px}
+  .slot .tm{font-family:var(--mono);color:var(--dim);width:64px;flex-shrink:0}
+  .actitem{display:flex;gap:9px;padding:7px 0;font-size:14px}
+  .actitem:before{content:"→";color:var(--good);flex-shrink:0}
+  .todoitem{display:flex;gap:10px;align-items:flex-start;padding:8px 0;font-size:14px;cursor:pointer;user-select:none}
+  .todoitem .box{width:18px;height:18px;border:1px solid var(--line);border-radius:5px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:12px;color:transparent}
+  .todoitem.done .box{background:var(--good);border-color:var(--good);color:#0e0f13}
+  .todoitem.done .txt{text-decoration:line-through;color:var(--faint)}
+  .weekactions{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 22px}
+  @media print{
+    body{background:#fff} body *{visibility:hidden !important}
+    #weekPrint,#weekPrint *{visibility:visible !important}
+    #weekPrint{position:absolute;left:0;top:0;width:100%;color:#111}
+    #weekPrint .weeksummary{background:#f6f1e7;border-color:#e0cfa6;color:#111}
+    #weekPrint .daycard{background:#fff;border-color:#ccc;break-inside:avoid;page-break-inside:avoid}
+    #weekPrint .daycard h4,#weekPrint .sech{color:#9a6a14}#weekPrint .sech.green{color:#2f7d4f}
+    #weekPrint .slot{border-color:#ddd}#weekPrint .actitem,#weekPrint .todoitem,#weekPrint .weekrange{color:#222}
+    #weekPrint .todoitem .box{border-color:#888}.weekactions,.pillarnav,.genrow{display:none !important}
+  }
+  .emptyhint{color:var(--faint);font-size:13px;text-align:center;padding:36px 20px}
+  .mancard{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);padding:16px 19px;margin-bottom:12px}
+  .mancard h3{margin:0 0 2px;font-size:15px;display:flex;align-items:center;gap:9px}
+  .mancard .cn{color:var(--accent);font-size:12px;font-weight:400}
+  .mancard .truth{font-size:15px;margin:9px 0 5px;line-height:1.6}
+  .mancard .truth.empty{color:var(--faint);font-style:italic;font-size:13.5px}
+  .mancard .act{color:var(--good);font-size:13.5px;display:flex;gap:8px}
+  .mancard .act:before{content:"→"}.mancard .act.empty{color:var(--faint);font-style:italic}
+  .manactions{display:flex;gap:10px;margin:20px 0;flex-wrap:wrap}
+  select{background:var(--card);color:var(--txt);border:1px solid var(--line);padding:10px;border-radius:10px;font-size:13.5px}
+  @media(max-width:760px){.side{display:none}.main{padding:22px 17px 100px}.grid{grid-template-columns:1fr}}
+  .mobnav{display:none}
+  @media(max-width:760px){.mobnav{display:block;margin-bottom:16px}.mobnav select{width:100%;font-size:14px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="side">
+    <div class="brand">Know Yourself OS<small>多研究你自己</small></div>
+    <div id="nav"></div>
+  </nav>
+  <main class="main">
+    <div class="topbar">
+      <div class="overallbar"><i id="overallFill"></i></div>
+      <div class="overalllabel" id="overallLabel"></div>
+      <div class="aibadge" id="aibadge"></div>
+    </div>
+    <div class="mobnav"><select id="mobsel"></select></div>
+    <div id="view"></div>
+  </main>
+</div>
+
+<script>
+/* ============ PROFILE DATA (onboarding pillars) ============ */
+const PILLARS = [
+  {id:"energy", emoji:"☀️", en:"Energy & Rhythm", cn:"能量与节奏",
+   intro:"When you run well and when you crash. The foundation everything else sits on.",
+   qs:[
+     {en:"What routine + breakfast leaves you energized for the whole day?", cn:"什么样的作息和早餐，能让晨起一整天元气满满？"},
+     {en:"When in the day is your mind sharpest? When do you reliably crash?", cn:"一天中什么时候头脑最清醒？什么时候必然会疲惫？"},
+     {en:"Name 3 things that quietly drain your energy.", cn:"哪三件事在悄悄消耗你的能量？"},
+     {en:"After you're depleted, what recharges you fastest?", cn:"被掏空之后，什么能让你最快回血？"}
+   ],
+   distillStem:"My energy runs best when…", expStem:"One change to my default day to test this week:"},
+  {id:"flow", emoji:"🎯", en:"Flow & Focus", cn:"心流与专注",
+   intro:"What you do that makes time and the phone disappear. Clues to where you belong.",
+   qs:[
+     {en:"What activity absorbs you so fully you forget your phone?", cn:"做什么事能沉浸式投入，下意识忘掉玩手机？"},
+     {en:"When did you last feel deep flow? What were you doing?", cn:"上一次进入深度心流是什么时候？当时在做什么？"},
+     {en:"What conditions need to be true for you to focus?", cn:"你需要哪些条件才能专注？"},
+     {en:"What kills your focus the fastest?", cn:"什么最快摧毁你的专注力？"}
+   ],
+   distillStem:"I'm most absorbed when…", expStem:"One protected flow block to schedule this week:"},
+  {id:"strength", emoji:"💎", en:"Strengths & Edge", cn:"优势与天赋",
+   intro:"The things easy for you but hard for others. Your unfair advantage hides here.",
+   qs:[
+     {en:"What small problems are you best at solving — your quiet superpower?", cn:"自己最拿手解决哪类小事，这就是你的小优势？"},
+     {en:"What do people repeatedly come to you for?", cn:"别人总是因为什么事来找你？"},
+     {en:"When praised, which comment genuinely lands?", cn:"被夸奖时，哪句评价是实打实戳中内心的？"},
+     {en:"What feels easy to you that others find hard?", cn:"什么事你觉得轻松，别人却觉得很难？"},
+     {en:"In what field do you feel no friction — the busier, the more fulfilled?", cn:"深耕什么领域时没有内耗，越忙越有成就感？"}
+   ],
+   distillStem:"My unfair advantage, in one line:", expStem:"One way to lean on this edge this week:"},
+  {id:"money", emoji:"💰", en:"Money & Freedom", cn:"金钱与自由",
+   intro:"What money is actually for, in your case. Worth getting brutally honest here.",
+   qs:[
+     {en:"What spending feels totally worth it — zero regret?", cn:"钱花在哪一类消费上，发自内心觉得超值？"},
+     {en:"Is working hard about proving worth, or building security?", cn:"努力赚钱，是想证明自我价值，还是为生活攒安全感？"},
+     {en:"Ideal money life: high income now, or free controllable time?", cn:"理想的赚钱生活，是高薪，还是自由可控的时间？"},
+     {en:"What does \"enough\" look like — an actual monthly number?", cn:"对你来说「够了」是一个怎样的月度数字？"},
+     {en:"If status didn't matter, what would you build for money?", cn:"如果不在乎身份地位，你会做什么来赚钱？"}
+   ],
+   distillStem:"My real relationship with money is:", expStem:"One revenue/freedom experiment for the next 30 days:"},
+  {id:"emotion", emoji:"🌊", en:"Emotional OS", cn:"情绪系统",
+   intro:"Your triggers and your resets. Knowing these is how you stop bleeding energy.",
+   qs:[
+     {en:"What small things break through your emotional defenses?", cn:"什么小事容易击溃情绪防线？"},
+     {en:"Besides toughing it out, what quickly soothes a bad mood?", cn:"心情不好时，除了硬扛，哪些小事能快速抚平坏情绪？"},
+     {en:"What's the earliest sign you're running on empty?", cn:"你快撑不住时，最早出现的信号是什么？"},
+     {en:"What story do you tell yourself when things go wrong?", cn:"出问题时你对自己讲什么故事？"}
+   ],
+   distillStem:"My triggers + what actually resets me:", expStem:"My reset protocol — what I'll do next time I'm off:"},
+  {id:"social", emoji:"🤝", en:"Social Energy", cn:"社交边界",
+   intro:"Who fills you up, who drains you, and how much alone time you actually need.",
+   qs:[
+     {en:"Where's your comfortable social limit? When do you force fake socializing?", cn:"舒服的社交分寸在哪？什么场合会勉强应酬？"},
+     {en:"Who leaves you energized? Who leaves you drained?", cn:"和谁相处后会充满能量？和谁相处后会被掏空？"},
+     {en:"How much alone time do you genuinely need?", cn:"你到底需要多少独处时间？"}
+   ],
+   distillStem:"My social truth (who/how much):", expStem:"One boundary to set or protect this week:"},
+  {id:"growth", emoji:"🌱", en:"Feedback & Growth", cn:"反馈与成长",
+   intro:"How you take criticism, and what you've already overcome that you forget to credit.",
+   qs:[
+     {en:"What criticism breaks your composure? What advice will you accept?", cn:"什么样的指责容易戳破心态？哪种建议愿意接纳？"},
+     {en:"In solitude, do you prefer zoning out, reading, or learning — why?", cn:"独处时，偏爱发呆、看书，还是学习新技能？为什么？"},
+     {en:"What did you achieve through persistence that you once didn't dare hope for?", cn:"靠咬牙坚持，完成了哪件从前不敢奢望的事？"},
+     {en:"What are you avoiding learning because it's uncomfortable?", cn:"有什么因为不舒服而逃避去学的东西？"}
+   ],
+   distillStem:"How I grow best + what I'm proud I overcame:", expStem:"One growth edge to lean into this week:"},
+  {id:"courage", emoji:"🔥", en:"Fear & Courage", cn:"恐惧与勇气",
+   intro:"The gap between effort that failed and the try you never made. Where regret lives.",
+   qs:[
+     {en:"Which stings more: effort that failed, or never trying / quitting midway?", cn:"哪个更遗憾：努力落空，还是从没尝试就放弃？"},
+     {en:"What are you NOT attempting because you fear failing?", cn:"你因为怕失败而没去尝试什么？"},
+     {en:"What would you do if you knew you couldn't fail?", cn:"如果保证不会失败，你会去做什么？"}
+   ],
+   distillStem:"My relationship with fear, honestly:", expStem:"One brave (small, real) action this week:"},
+  {id:"values", emoji:"🧭", en:"Values & Regret", cn:"价值与遗憾",
+   intro:"What matters when nobody's watching. The compass for the bigger choices.",
+   qs:[
+     {en:"The regret you least want: missing the people, or betraying your passion?", cn:"最不愿留下的遗憾，是错过陪伴，还是辜负热爱？"},
+     {en:"Name 5 things that matter most when nobody is watching.", cn:"没人看着时，对你最重要的五件事是什么？"},
+     {en:"What would make a whole year feel well-spent?", cn:"怎样的一年，会让你觉得没有白过？"}
+   ],
+   distillStem:"What I actually value (top 3):", expStem:"One way to align my next 90 days to my #1 value:"},
+  {id:"vision", emoji:"✨", en:"Identity & Vision", cn:"身份与愿景",
+   intro:"Who you're becoming. Speak to your past self, write to your future self.",
+   qs:[
+     {en:"How do you hope others see you?", cn:"你期许在旁人眼里成为怎样的人？"},
+     {en:"What would you say to your past self?", cn:"想和从前的自己说什么？"},
+     {en:"Rest of your life: steady grind, or ordinary joys AND your passion?", cn:"往后余生，稳步打拼，还是烟火与热爱兼得？"},
+     {en:"Write a short note from your future self, 3 years out.", cn:"以三年后的自己的口吻，写几句话。"}
+   ],
+   distillStem:"Who I'm becoming (\"I'm the kind of person who…\"):", expStem:"One identity-based habit to start this week:"}
+];
+const DAILY_PROMPTS = [
+  {en:"What's one small thing today you'd quietly recognize yourself for?", cn:"今天哪件小事值得肯定自己？"},
+  {en:"What drained you today, and could you avoid it tomorrow?", cn:"今天什么消耗了你？明天能避开吗？"},
+  {en:"When did you feel most like yourself today?", cn:"今天什么时刻你最像自己？"},
+  {en:"What did you avoid today out of fear, not logic?", cn:"今天你出于恐惧逃避了什么？"},
+  {en:"What's one thing you're grateful you get to do?", cn:"有什么事你庆幸是「能做」而非「必须做」？"},
+  {en:"If today repeated for a year, where would you end up?", cn:"如果今天重复一年，你会走向哪里？"},
+  {en:"What truth about yourself did today confirm?", cn:"今天印证了你对自己的什么认知？"}
+];
+
+/* ============ AI ============ */
+const COWORK_AI = !!(window.cowork && typeof window.cowork.askClaude === "function");
+function aiReady(){ return COWORK_AI || !!(store.apiKey && store.apiKey.trim()); }
+function aiMode(){ return COWORK_AI ? "cowork" : (store.apiKey&&store.apiKey.trim() ? "key" : "off"); }
+async function ai(prompt, data){
+  if(COWORK_AI) return aiCowork(prompt, data);
+  if(store.apiKey && store.apiKey.trim()) return clean(await callApi([{role:"user",content:prompt+ansBody(data)}], null, 600));
+  throw {soft:"AI isn't connected. Open in Cowork, or add an Anthropic API key in ⚙ Settings."};
+}
+async function aiCowork(prompt, data){
+  const r = await window.cowork.askClaude(prompt, data||[]);
+  if(r==null) return "";
+  if(typeof r==="string") return clean(r);
+  if(typeof r.text==="string") return clean(r.text);
+  if(typeof r.content==="string") return clean(r.content);
+  if(Array.isArray(r.content)) return clean(r.content.map(c=>(c&&c.text)||"").join(""));
+  if(r.structuredContent) return clean(typeof r.structuredContent==="string"?r.structuredContent:JSON.stringify(r.structuredContent));
+  if(r.result) return clean(String(r.result));
+  return clean(String(r));
+}
+function ansBody(data){ return (data&&data.length)?("\n\nInputs:\n"+data.map(d=>"- "+d.question+": "+d.answer).join("\n")):""; }
+async function callApi(messages, system, maxTokens){
+  let res;
+  try{
+    res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"content-type":"application/json","x-api-key":store.apiKey.trim(),
+        "anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+      body:JSON.stringify(Object.assign({model:store.model||"claude-haiku-4-5-20251001",max_tokens:maxTokens||500,messages:messages}, system?{system:system}:{}))
+    });
+  }catch(e){ throw {soft:"Network error reaching the API."}; }
+  if(!res.ok){
+    let msg="API error "+res.status;
+    if(res.status===401) msg="Key rejected (401). Check your key in ⚙ Settings.";
+    else if(res.status===400) msg="Bad request (400) — model name may be wrong.";
+    else if(res.status===429) msg="Rate limited (429). Wait and retry.";
+    throw {soft:msg};
+  }
+  const j=await res.json();
+  return (j && j.content && j.content[0] && j.content[0].text || "").trim();
+}
+async function aiJSON(prompt, data){
+  const body=ansBody(data);
+  if(COWORK_AI){
+    const raw=await aiCowork(prompt+body+"\n\nReturn ONLY one valid minified JSON object — no markdown, no fences.", data);
+    const p=parseJSONloose(raw); if(!p) throw {soft:"AI reply wasn't structured — try again."}; return p;
+  }
+  if(store.apiKey && store.apiKey.trim()){
+    const sys="You are a strict JSON generator. Output exactly one valid minified JSON object and nothing else.";
+    const raw=await callApi([{role:"user",content:prompt+body},{role:"assistant",content:"{"}], sys, 1600);
+    const p=parseJSONloose("{"+raw); if(!p) throw {soft:"AI reply wasn't structured — try again."}; return p;
+  }
+  throw {soft:"AI isn't connected. Open in Cowork, or add an API key in ⚙ Settings."};
+}
+function clean(s){ return (s||"").trim().replace(/^["'""]|["'""]$/g,"").trim(); }
+function parseJSONloose(txt){
+  if(!txt) return null;
+  txt=String(txt).trim().replace(/^```(?:json)?\s*/i,"").replace(/\s*```$/,"").trim();
+  try{return JSON.parse(txt);}catch(e){}
+  const a=txt.indexOf("{"); if(a<0) return null;
+  const b=txt.lastIndexOf("}");
+  if(b>a){ try{return JSON.parse(txt.slice(a,b+1));}catch(e2){} }
+  let s=txt.slice(a), inStr=false, esc=false, stack=[];
+  for(let i=0;i<s.length;i++){ const c=s[i];
+    if(esc){esc=false;continue;} if(c==="\\"){esc=true;continue;}
+    if(c==='"'){inStr=!inStr;continue;} if(inStr)continue;
+    if(c==="{"||c==="[")stack.push(c); else if(c==="}"||c==="]")stack.pop(); }
+  let fixed=s.replace(/,\s*$/,""); if(inStr) fixed+='"';
+  for(let i=stack.length-1;i>=0;i--) fixed+= stack[i]==="{"?"}":"]";
+  try{return JSON.parse(fixed);}catch(e3){} return null;
+}
+
+/* ============ STORAGE ============ */
+const KEY="knowYourselfOS_v2";
+function blank(){ return {ans:{},distill:{},exp:{},aiFlag:{},apiKey:"",model:"claude-haiku-4-5-20251001",waNumber:"",
+  mission:null, week:null, daily:{}, journal:[], reviews:[], lastBackup:null }; }
+function normalize(s){ const b=blank(); for(const k in b){ if(s[k]===undefined) s[k]=b[k]; }
+  // migrate old log[]/dailyNote{} into daily{}
+  if(s.log && Array.isArray(s.log)){ s.log.forEach(l=>{ if(l&&l.date){ s.daily[l.date]=s.daily[l.date]||{}; if(l.energy)s.daily[l.date].energy=l.energy; if(l.mood)s.daily[l.date].mood=l.mood; } }); delete s.log; }
+  if(s.dailyNote){ for(const d in s.dailyNote){ s.daily[d]=s.daily[d]||{}; if(!s.daily[d].note) s.daily[d].note=s.dailyNote[d]; } delete s.dailyNote; }
+  return s; }
+let store = load();
+function load(){ try{const p=JSON.parse(localStorage.getItem(KEY)); return p?normalize(p):blank();}catch(e){return blank();} }
+function save(){ localStorage.setItem(KEY,JSON.stringify(store)); }
+
+/* ============ DATE / PROGRESS ============ */
+function todayISO(){ return new Date().toISOString().slice(0,10); }
+function mondayOf(d){ const x=new Date(d); const day=(x.getDay()+6)%7; x.setDate(x.getDate()-day); x.setHours(0,0,0,0); return x; }
+function dayObj(date){ store.daily[date]=store.daily[date]||{}; return store.daily[date]; }
+function streak(){ let n=0; const d=new Date(); for(;;){ const k=d.toISOString().slice(0,10); const o=store.daily[k];
+  const has=o&&(o.energy||o.mood||o.intention||o.win||o.note||o.alignment); if(has){n++; d.setDate(d.getDate()-1);} else break; if(n>900)break; } return n; }
+function pillarProgress(p){ let total=p.qs.length+2, done=0;
+  p.qs.forEach((q,i)=>{ if((store.ans[p.id+"_"+i]||"").trim()) done++; });
+  if((store.distill[p.id]||"").trim()) done++; if((store.exp[p.id]||"").trim()) done++;
+  return Math.round(done/total*100); }
+function overallProgress(){ let s=0; PILLARS.forEach(p=>s+=pillarProgress(p)); return Math.round(s/PILLARS.length); }
+function profileDistills(ids){ const out=[]; (ids||PILLARS.map(p=>p.id)).forEach(id=>{ const p=PILLARS.find(x=>x.id===id);
+  const t=(store.distill[id]||"").trim(); if(t) out.push({question:p.en, answer:t}); }); return out; }
+function ansOf(pid, qi){ return (store.ans[pid+"_"+qi]||"").trim(); }
+
+/* ============ NAV ============ */
+const NAV=[
+  {sec:"Daily"},
+  {id:"today", ic:"🌅", label:"Today"},
+  {id:"journal", ic:"📓", label:"Journal"},
+  {id:"history", ic:"🕘", label:"History"},
+  {id:"reset", ic:"🌿", label:"Reset", cls:"reset"},
+  {sec:"Direction"},
+  {id:"mission", ic:"⭐", label:"Mission"},
+  {id:"week", ic:"🗓️", label:"This Week"},
+  {id:"review", ic:"🔄", label:"Weekly Review"},
+  {sec:"Profile"},
+  {id:"profile", ic:"🧩", label:"My Profile", prof:true},
+  {id:"manual", ic:"📖", label:"Operating Manual"},
+  {sec:""},
+  {id:"settings", ic:"⚙️", label:"AI Settings"}
+];
+let current="today";
+function renderNav(){
+  const nav=document.getElementById("nav"); let html="";
+  NAV.forEach(n=>{
+    if(n.sec!==undefined){ html+= n.sec?`<div class="navsection">${n.sec}</div>`:`<div style="height:10px"></div>`; return; }
+    const pct = n.prof?`<span class="pct">${overallProgress()}%</span>`:"";
+    html+=`<div class="navitem ${n.cls||""} ${current===n.id?'active':''}" data-go="${n.id}"><span class="ic">${n.ic}</span>${n.label}${pct}</div>`;
+  });
+  nav.innerHTML=html;
+  nav.querySelectorAll("[data-go]").forEach(el=>el.onclick=()=>go(el.dataset.go));
+  const sel=document.getElementById("mobsel"); let opts="";
+  NAV.forEach(n=>{ if(n.sec!==undefined) return; opts+=`<option value="${n.id}">${n.ic} ${n.label}</option>`; });
+  PILLARS.forEach(p=>opts+=`<option value="${p.id}">　${p.emoji} ${p.en}</option>`);
+  sel.innerHTML=opts; sel.value=current; sel.onchange=()=>go(sel.value);
+  const ov=overallProgress();
+  document.getElementById("overallFill").style.width=ov+"%";
+  document.getElementById("overallLabel").textContent=ov+"% profile";
+  const badge=document.getElementById("aibadge"); const m=aiMode();
+  badge.className="aibadge "+(m==="off"?"off":"on");
+  badge.textContent = m==="cowork"?"✨ AI on":m==="key"?"✨ AI on":"AI off — ⚙";
+  badge.onclick=()=>go("settings");
+}
+function go(id){ current=id; renderNav(); renderView(); window.scrollTo(0,0); }
+function flash(el){ el.classList.add("show"); setTimeout(()=>el.classList.remove("show"),1100); }
+function ta(value, oninput, ph){ const t=document.createElement("textarea"); t.value=value||""; if(ph)t.placeholder=ph; t.addEventListener("input",oninput); return t; }
+function dotRow(label, val, onPick, max){ const row=document.createElement("div"); row.className="scalerow";
+  row.innerHTML=`<span class="lab">${label}</span>`;
+  for(let n=1;n<=(max||5);n++){ const d=document.createElement("div"); d.className="dot"+(val===n?" on":""); d.textContent=n; d.onclick=()=>onPick(n); row.appendChild(d); } return row; }
+
+function renderView(){
+  const v=document.getElementById("view"); v.innerHTML="";
+  const r={today:renderToday,journal:renderJournal,history:renderHistory,reset:renderReset,mission:renderMission,week:renderWeek,review:renderReview,profile:renderProfile,manual:renderManual,settings:renderSettings}[current];
+  if(r) return r(v);
+  const p=PILLARS.find(x=>x.id===current); if(p) renderPillar(v,p);
+}
+function refreshNav(){ const ov=overallProgress(); document.getElementById("overallFill").style.width=ov+"%"; document.getElementById("overallLabel").textContent=ov+"% profile"; }
+
+/* ============ TODAY ============ */
+const INTENT_FOCUSES=[
+  "a money or revenue move toward your freedom number",
+  "your health, energy, or body",
+  "a relationship — someone you care about or want to reconnect with",
+  "learning or sharpening a skill",
+  "a brave action you've been avoiding (fear & courage)",
+  "deep, focused work on your craft",
+  "rest, play, or genuine recovery",
+  "fixing or simplifying a system/environment that drains you",
+  "helping someone or giving without expecting anything back",
+  "reflection, planning, or zooming out on the bigger picture",
+  "a small experiment or bet that could compound over time",
+  "presence — being fully in whatever you're doing today"
+];
+function recentIntentions(n){ const out=[]; const today=todayISO();
+  Object.keys(store.daily).filter(k=>k!==today).sort().reverse().forEach(k=>{ const t=((store.daily[k]||{}).intention||"").trim(); if(t && !out.includes(t)) out.push(t); });
+  return out.slice(0, n||6); }
+function greetWord(){ const h=new Date().getHours(); return h<5?"Still up":h<12?"Good morning":h<18?"Good afternoon":"Good evening"; }
+function pickMemory(){ const c=store.journal.filter(j=>j.pinned||j.type==="happy"); if(!c.length) return null; return c[Math.floor(Math.random()*c.length)]; }
+function renderToday(v){
+  v.innerHTML="";
+  const d=todayISO(); const o=dayObj(d);
+  const head=document.createElement("div");
+  head.innerHTML=`<div class="greet">${greetWord()}.</div><div class="greetsub">${new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})} &nbsp;·&nbsp; <span class="streakpill">🔥 ${streak()}-day streak</span></div>`;
+  v.appendChild(head);
+
+  const hasData=Object.keys(store.daily).length || store.journal.length;
+  const needBackup = hasData && (!store.lastBackup || (Date.now()-new Date(store.lastBackup).getTime() > 7*864e5));
+  if(needBackup){ const bk=document.createElement("div"); bk.className="howto"; bk.style.borderColor="rgba(232,169,75,.45)";
+    bk.innerHTML=`💾 <b>Back up your journal.</b> Your entries live only in this browser — download a backup so a cache-clear can never erase them.`;
+    const b=document.createElement("button"); b.className="genbtn gold"; b.style.marginTop="9px"; b.textContent="⬇ Back up now";
+    b.onclick=()=>{ exportBackup(); renderToday(v); };
+    bk.appendChild(document.createElement("br")); bk.appendChild(b); v.appendChild(bk); }
+
+  if(store.mission && store.mission.statement){
+    const ns=document.createElement("div"); ns.className="northstar";
+    ns.innerHTML=`<div class="lab">⭐ North Star</div><div class="stmt">${escapeHtml(store.mission.statement)}</div>`;
+    const idn=(store.distill.vision||"").trim(); if(idn) ns.innerHTML+=`<div class="identity">${escapeHtml(idn)}</div>`;
+    v.appendChild(ns);
+  } else {
+    const ns=document.createElement("div"); ns.className="howto";
+    ns.innerHTML=`No North Star yet. <b>⭐ Mission</b> turns your profile into a one-line life focus that everything here ladders up to.`;
+    v.appendChild(ns);
+  }
+
+  // Morning: intention
+  const mc=document.createElement("div"); mc.className="card";
+  mc.innerHTML=`<div class="blocklab">🌅 Today's one intention</div>`;
+  const genrow=document.createElement("div"); genrow.className="genrow";
+  const sug=document.createElement("button"); sug.className="genbtn gold"; sug.innerHTML="✨ Suggest from my profile";
+  const sgst=document.createElement("span"); sgst.className="genstate"; genrow.appendChild(sug); genrow.appendChild(sgst);
+  const sv=document.createElement("span"); sv.className="saved"; sv.textContent="saved ✓";
+  const it=ta(o.intention,function(){ o.intention=this.value; save(); flash(sv); }, "The one thing that would make today count…");
+  const doneline=document.createElement("div"); doneline.className="checkline"+(o.intentionDone?" done":""); doneline.style.marginTop="10px";
+  doneline.innerHTML=`<span class="box">✓</span><span class="t">I did it today</span>`;
+  doneline.onclick=()=>{ o.intentionDone=!o.intentionDone; save(); renderToday(v); };
+  mc.appendChild(genrow); mc.appendChild(it); mc.appendChild(sv); mc.appendChild(doneline); v.appendChild(mc);
+  sug.onclick=async()=>{ if(!aiReady()){ sgst.className="genstate err"; sgst.textContent="Add a key in ⚙ Settings."; return; }
+    sug.disabled=true; sgst.className="genstate"; sgst.innerHTML=`<span class="spin"></span> thinking…`;
+    try{ const data=[]; if(store.mission)data.push({question:"My mission",answer:store.mission.statement});
+      if(store.distill.strength)data.push({question:"My edge",answer:store.distill.strength});
+      const focus=INTENT_FOCUSES[Math.floor(Math.random()*INTENT_FOCUSES.length)];
+      data.push({question:"Today's focus area (build the intention around THIS lens)",answer:focus});
+      const recent=recentIntentions(6);
+      if(recent.length) data.push({question:"My recent intentions — do NOT repeat or echo these",answer:recent.join(" / ")});
+      const out=await ai("Suggest ONE intention for me today, built around the focus area above. Make it specific, concrete and doable today; first person; max 1 sentence. It MUST be clearly different from my recent intentions in both domain and wording — vary the time of day and the opening; do not reference my workout or morning routine unless the focus truly calls for it. Return only the sentence. ["+Date.now().toString(36)+"]", data);
+      it.value=out; o.intention=out; save(); sgst.textContent=""; flash(sv);
+    }catch(err){ sgst.className="genstate err"; sgst.textContent=err.soft||"Try again."; } sug.disabled=false; };
+
+  // Memory call-back
+  const mem=pickMemory();
+  if(mem){ const mb=document.createElement("div"); mb.className="memory";
+    mb.innerHTML=`<div class="lab">🌤️ Remember this</div><div class="txt">${escapeHtml(mem.text)}</div><div class="dt">${mem.date}</div>`;
+    v.appendChild(mb); }
+
+  // Evening pulse
+  const ec=document.createElement("div"); ec.className="card";
+  ec.innerHTML=`<div class="blocklab">🌙 Evening pulse</div>`;
+  ec.appendChild(dotRow("⚡ Energy", o.energy, n=>{ o.energy=n; save(); renderToday(v); }));
+  ec.appendChild(dotRow("🌊 Mood", o.mood, n=>{ o.mood=n; save(); renderToday(v); }));
+  ec.appendChild(dotRow("🎯 Aligned with mission?", o.alignment, n=>{ o.alignment=n; save(); renderToday(v); }));
+  const winsv=document.createElement("span"); winsv.className="saved"; winsv.textContent="saved ✓";
+  const winlab=document.createElement("div"); winlab.style.cssText="font-size:13px;color:var(--dim);margin:8px 0 5px"; winlab.textContent="One win today";
+  const win=ta(o.win,function(){ o.win=this.value; save(); flash(winsv); },"Even a tiny one…");
+  const drainlab=document.createElement("div"); drainlab.style.cssText="font-size:13px;color:var(--dim);margin:10px 0 5px"; drainlab.textContent="One drain to avoid tomorrow";
+  const drain=ta(o.drain,function(){ o.drain=this.value; save(); },"");
+  ec.appendChild(winlab); ec.appendChild(win); ec.appendChild(winsv); ec.appendChild(drainlab); ec.appendChild(drain); v.appendChild(ec);
+
+  // reflection prompt
+  const dp=DAILY_PROMPTS[(new Date().getDate())%DAILY_PROMPTS.length];
+  const rc=document.createElement("div"); rc.className="card";
+  rc.innerHTML=`<div class="blocklab">🪞 Reflection</div><div style="font-size:15px;font-weight:600;margin-bottom:2px">${dp.en}</div><div style="color:var(--dim);font-size:13px;margin-bottom:10px">${dp.cn}</div>`;
+  const rsv=document.createElement("span"); rsv.className="saved"; rsv.textContent="saved ✓";
+  const rt=ta(o.note,function(){ o.note=this.value; save(); flash(rsv); },"");
+  rc.appendChild(rt); rc.appendChild(rsv);
+  const addj=document.createElement("button"); addj.className="genbtn calm"; addj.style.marginTop="10px"; addj.textContent="＋ Save this to Journal";
+  addj.onclick=()=>{ if((o.note||"").trim()){ addJournal("note", o.note.trim()); addj.textContent="Saved to Journal ✓"; setTimeout(()=>addj.textContent="＋ Save this to Journal",1500);} };
+  rc.appendChild(document.createElement("br")); rc.appendChild(addj); v.appendChild(rc);
+
+  const row=document.createElement("div"); row.className="rowbtns";
+  const rb=document.createElement("button"); rb.className="btn"; rb.style.borderColor="rgba(224,115,94,.4)"; rb.style.color="var(--accent2)"; rb.textContent="🌿 I'm having a hard day — Reset"; rb.onclick=()=>go("reset");
+  row.appendChild(rb); v.appendChild(row);
+}
+
+/* ============ RESET PROTOCOL ============ */
+function renderReset(v){
+  v.innerHTML=`<h1>🌿 Reset</h1><div class="sub">A bad moment isn't the whole story. Take this one slow step at a time.</div>`;
+
+  // 1 breathe
+  const s1=document.createElement("div"); s1.className="resetstep";
+  s1.innerHTML=`<h3><span class="n">1</span> Breathe</h3><div style="color:var(--dim);font-size:13.5px">Follow the circle — in as it grows, out as it shrinks. Just four rounds.</div><div class="breathe">in · out</div>`;
+  v.appendChild(s1);
+
+  // 2 your own soothers
+  const s2=document.createElement("div"); s2.className="resetstep";
+  s2.innerHTML=`<h3><span class="n">2</span> What helps you (your own words)</h3>`;
+  const sooth=ansOf("emotion",1), recharge=ansOf("energy",3);
+  if(sooth) s2.innerHTML+=`<div class="yourwords"><span class="src">things that soothe you</span>${escapeHtml(sooth)}</div>`;
+  if(recharge) s2.innerHTML+=`<div class="yourwords"><span class="src">what recharges you</span>${escapeHtml(recharge)}</div>`;
+  if(!sooth&&!recharge) s2.innerHTML+=`<div style="color:var(--faint);font-size:13px">Fill in your Emotional OS &amp; Energy pillars and your own coping tools will appear here.</div>`;
+  v.appendChild(s2);
+
+  // 3 reframe
+  const s3=document.createElement("div"); s3.className="resetstep";
+  s3.innerHTML=`<h3><span class="n">3</span> The story vs. the evidence</h3>`;
+  const story=ansOf("emotion",3), wins=ansOf("growth",2);
+  if(story) s3.innerHTML+=`<div class="yourwords"><span class="src">the story you tend to tell yourself</span>${escapeHtml(story)}</div>`;
+  const rfrow=document.createElement("div"); rfrow.className="genrow";
+  const rfb=document.createElement("button"); rfb.className="genbtn calm"; rfb.innerHTML="✨ Help me reframe, gently";
+  const rfst=document.createElement("span"); rfst.className="genstate"; rfrow.appendChild(rfb); rfrow.appendChild(rfst);
+  s3.appendChild(rfrow);
+  const rfout=document.createElement("div"); s3.appendChild(rfout); v.appendChild(s3);
+  rfb.onclick=async()=>{ if(!aiReady()){ rfst.className="genstate err"; rfst.textContent="Add a key in ⚙ Settings."; return; }
+    rfb.disabled=true; rfst.className="genstate"; rfst.innerHTML=`<span class="spin"></span> …`;
+    try{ const data=[]; if(story)data.push({question:"The unkind story I tell myself",answer:story});
+      if(wins)data.push({question:"Things I've overcome",answer:wins});
+      if(sooth)data.push({question:"What soothes me",answer:sooth});
+      const out=await ai("I'm having a really hard day. Speak to me directly and warmly in 3-4 short sentences: gently question the unkind story without dismissing how I feel, remind me of my own evidence to the contrary, and point me toward one small kind thing I can do right now. No clinical tone, no lists, no diagnosis.", data);
+      rfout.innerHTML=`<div class="reframe">${escapeHtml(out)}</div>`; rfst.textContent="";
+    }catch(err){ rfst.className="genstate err"; rfst.textContent=err.soft||"Try again."; } rfb.disabled=false; };
+
+  // 4 good memory
+  const s4=document.createElement("div"); s4.className="resetstep";
+  s4.innerHTML=`<h3><span class="n">4</span> A good memory</h3>`;
+  const mem=pickMemory();
+  if(mem){ s4.innerHTML+=`<div class="yourwords"><span class="src">from your journal · ${mem.date}</span>${escapeHtml(mem.text)}</div>`; }
+  else { s4.innerHTML+=`<div style="color:var(--faint);font-size:13px">Save happy moments in your <b>Journal</b> and one will resurface here when you need it.</div>`; }
+  v.appendChild(s4);
+
+  // 5 tiny step + log
+  const s5=document.createElement("div"); s5.className="resetstep";
+  s5.innerHTML=`<h3><span class="n">5</span> One tiny step</h3><div style="color:var(--dim);font-size:13.5px;margin-bottom:8px">Not the whole mountain. Just the next 5 minutes. Write what you'll do, then go do it.</div>`;
+  const stepsv=document.createElement("span"); stepsv.className="saved"; stepsv.textContent="saved ✓";
+  const today=dayObj(todayISO()); today.reset=today.reset||{};
+  const stepIn=ta(today.reset.step,function(){ today.reset.step=this.value; save(); flash(stepsv); },"e.g. drink water, step outside for 3 minutes, message one person…");
+  s5.appendChild(stepIn); s5.appendChild(stepsv);
+  s5.innerHTML+=`<div class="careline">If it feels darker than a hard day — heavy in a way that scares you — please reach out to someone you trust or a mental-health professional. You don't have to carry it alone.</div>`;
+  v.appendChild(s5);
+
+  const row=document.createElement("div"); row.className="rowbtns";
+  const back=document.createElement("button"); back.className="btn"; back.textContent="← Back to Today"; back.onclick=()=>go("today");
+  row.appendChild(back); v.appendChild(row);
+}
+
+/* ============ MISSION ============ */
+function renderMission(v){
+  v.innerHTML=`<h1>⭐ Mission · North Star</h1><div class="sub">One line that everything — your week, your days — should ladder up to. Built from your profile.</div>`;
+  const gr=document.createElement("div"); gr.className="genrow";
+  const b=document.createElement("button"); b.className="genbtn gold"; b.innerHTML="✨ "+(store.mission?"Regenerate from my profile":"Generate my North Star");
+  const st=document.createElement("span"); st.className="genstate"; gr.appendChild(b); gr.appendChild(st); v.appendChild(gr);
+  const holder=document.createElement("div"); v.appendChild(holder);
+  function draw(){ holder.innerHTML="";
+    if(!store.mission || !store.mission.statement){ const e=document.createElement("div"); e.className="emptyhint"; e.textContent="Fill in your Values, Vision and Money pillars, then generate your mission."; holder.appendChild(e); return; }
+    const ns=document.createElement("div"); ns.className="northstar"; ns.style.marginBottom="14px";
+    ns.innerHTML=`<div class="lab">⭐ My mission</div><div class="stmt">${escapeHtml(store.mission.statement)}</div>`; holder.appendChild(ns);
+    if(store.mission.principles && store.mission.principles.length){
+      const pc=document.createElement("div"); pc.className="card"; pc.innerHTML=`<div class="blocklab">Operating principles</div>`;
+      store.mission.principles.forEach(p=>{ const r=document.createElement("div"); r.className="actitem"; r.style.color="var(--txt)"; r.textContent=p; pc.appendChild(r); });
+      holder.appendChild(pc);
+    }
+    const ed=document.createElement("div"); ed.className="card"; ed.innerHTML=`<div class="blocklab">Edit mission statement</div>`;
+    const sv=document.createElement("span"); sv.className="saved"; sv.textContent="saved ✓";
+    const tt=ta(store.mission.statement,function(){ store.mission.statement=this.value; save(); flash(sv); });
+    ed.appendChild(tt); ed.appendChild(sv); holder.appendChild(ed);
+  }
+  draw();
+  b.onclick=async()=>{ if(!aiReady()){ st.className="genstate err"; st.textContent="Add a key in ⚙ Settings."; return; }
+    const data=profileDistills(["values","vision","money","strength","courage"]);
+    if(!data.length){ st.className="genstate err"; st.textContent="Distil your Values/Vision/Money pillars first."; return; }
+    b.disabled=true; st.className="genstate"; st.innerHTML=`<span class="spin"></span> synthesizing…`;
+    try{ const p=await aiJSON('From my self-knowledge below, write my life "North Star". Return JSON: {"statement":"one warm, first-person, 1-2 sentence life mission","principles":["3 short first-person operating principles"]}. Make it specific to me, not generic.', data);
+      store.mission={statement:p.statement||"", principles:Array.isArray(p.principles)?p.principles:[], generatedAt:new Date().toISOString()}; save();
+      st.textContent=""; b.innerHTML="✨ Regenerate from my profile"; draw(); renderNav();
+    }catch(err){ st.className="genstate err"; st.textContent=err.soft||"Try again."; } b.disabled=false; };
+}
+
+/* ============ THIS WEEK ============ */
+function weekIntentions(){ const out=[]; PILLARS.forEach(p=>{ const t=(store.distill[p.id]||"").trim(), e=(store.exp[p.id]||"").trim();
+  if(e||t) out.push({question:p.en, answer:(t?("Insight: "+t+". "):"")+(e?("Experiment: "+e):"")}); }); return out; }
+const DAYNAMES=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+function weekDateMap(){ const mon=mondayOf(new Date()); const map={};
+  DAYNAMES.forEach((nm,i)=>{ const d=new Date(mon); d.setDate(mon.getDate()+i); map[nm]=d.toLocaleDateString(undefined,{month:"short",day:"numeric"}); });
+  const end=new Date(mon); end.setDate(mon.getDate()+6);
+  map._range=mon.toLocaleDateString(undefined,{month:"short",day:"numeric"})+" – "+end.toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"}); return map; }
+async function genWeeklyPlan(){ const intents=weekIntentions(); if(!intents.length) throw {soft:"Add some pillar experiments first (Operating Manual → Generate everything)."};
+  const prompt=`You are a sharp executive assistant. Below are my intentions and small experiments from a self-discovery process. Turn them into a concrete, realistic plan for the next 7 days. Keep it light — never more than 1-2 things a day, spread across the week, realistic clock times. Base everything strictly on my inputs.
+Return ONLY valid minified JSON: {"summary":"one short motivating sentence","days":[{"day":"Monday","slots":[{"time":"07:30","action":"short action"}]}],"actions":["3-6 action items"],"todos":["4-8 short checklist items"]}. Only include days that have something. Full English day names.`;
+  const parsed=await aiJSON(prompt, intents);
+  const todos=(parsed.todos||[]).map(t=>({text:typeof t==="string"?t:(t.text||String(t)),done:false}));
+  store.week={ generatedAt:new Date().toISOString(), summary:parsed.summary||"", days:parsed.days||[], actions:parsed.actions||[], todos }; save(); return store.week; }
+function weekToText(w){ const dm=weekDateMap(); let t="🗓️ *My Week* — Know Yourself OS\n"+dm._range+"\n\n"; if(w.summary)t+=w.summary+"\n\n";
+  (w.days||[]).forEach(d=>{ t+="*"+d.day+(dm[d.day]?(" ("+dm[d.day]+")"):"")+"*\n"; (d.slots||[]).forEach(s=>{ t+="• "+(s.time?s.time+" — ":"")+s.action+"\n"; }); t+="\n"; });
+  if(w.actions&&w.actions.length){ t+="✅ *Action items*\n"; w.actions.forEach(a=>t+="• "+a+"\n"); t+="\n"; }
+  if(w.todos&&w.todos.length){ t+="📋 *To-do*\n"; w.todos.forEach(td=>t+="◻️ "+(td.text||td)+"\n"); } return t.trim(); }
+function renderWeek(v){
+  v.innerHTML=`<h1>🗓️ This Week</h1><div class="sub">Your experiments, organized into a doable 7-day plan.</div>`;
+  const gen=document.createElement("div"); gen.className="genrow";
+  const btn=document.createElement("button"); btn.className="genbtn gold"; btn.innerHTML="✨ "+(store.week?"Regenerate this week":"Build my week from my experiments");
+  const st=document.createElement("span"); st.className="genstate"; gen.appendChild(btn); gen.appendChild(st); v.appendChild(gen);
+  const holder=document.createElement("div"); v.appendChild(holder);
+  function draw(){ holder.innerHTML=""; const w=store.week;
+    if(!w){ const e=document.createElement("div"); e.className="emptyhint"; e.textContent="No plan yet. Make sure your pillars have experiments, then tap Build my week."; holder.appendChild(e); return; }
+    const dm=weekDateMap(); const print=document.createElement("div"); print.id="weekPrint"; let html="";
+    html+=`<div class="weekrange">${dm._range}</div>`; if(w.summary) html+=`<div class="weeksummary">${escapeHtml(w.summary)}</div>`;
+    if(w.days&&w.days.length){ html+=`<div class="sech">📅 Calendar</div>`; w.days.forEach(d=>{ html+=`<div class="daycard"><h4>${escapeHtml(d.day)} <span class="dt">${dm[d.day]||""}</span></h4>`;
+      (d.slots||[]).forEach(s=>{ html+=`<div class="slot"><span class="tm">${escapeHtml(s.time||"")}</span><span>${escapeHtml(s.action||"")}</span></div>`; }); html+=`</div>`; }); }
+    if(w.actions&&w.actions.length){ html+=`<div class="sech green">✅ Action items</div>`; w.actions.forEach(a=>{ html+=`<div class="actitem">${escapeHtml(a)}</div>`; }); }
+    print.innerHTML=html;
+    if(w.todos&&w.todos.length){ const th=document.createElement("div"); th.className="sech"; th.textContent="📋 To-do checklist"; print.appendChild(th);
+      w.todos.forEach((td,i)=>{ const row=document.createElement("div"); row.className="todoitem"+(td.done?" done":""); row.innerHTML=`<span class="box">✓</span><span class="txt">${escapeHtml(td.text)}</span>`;
+        row.onclick=()=>{ store.week.todos[i].done=!store.week.todos[i].done; save(); draw(); }; print.appendChild(row); }); }
+    holder.appendChild(print);
+    const acts=document.createElement("div"); acts.className="weekactions";
+    const pdf=document.createElement("button"); pdf.className="btn primary"; pdf.textContent="⬇ Download PDF"; pdf.onclick=()=>window.print();
+    const wa=document.createElement("button"); wa.className="btn"; wa.textContent="🟢 Send to WhatsApp"; wa.onclick=()=>{ const txt=encodeURIComponent(weekToText(w)); const num=(store.waNumber||"").replace(/[^0-9]/g,""); window.open(num?("https://wa.me/"+num+"?text="+txt):("https://wa.me/?text="+txt),"_blank"); };
+    const cp=document.createElement("button"); cp.className="btn"; cp.textContent="📋 Copy"; cp.onclick=async()=>{ try{await navigator.clipboard.writeText(weekToText(w)); cp.textContent="Copied ✓"; setTimeout(()=>cp.textContent="📋 Copy",1500);}catch(e){} };
+    acts.appendChild(pdf); acts.appendChild(wa); acts.appendChild(cp); holder.appendChild(acts);
+    const tip=document.createElement("div"); tip.className="howto"; tip.innerHTML="<b>PDF:</b> choose “Save as PDF” in the print dialog. <b>WhatsApp:</b> opens a chat pre-filled with this plan — set your number in ⚙️ Settings to go straight to yourself.";
+    holder.appendChild(tip);
+  }
+  draw();
+  btn.onclick=async()=>{ if(!aiReady()){ st.className="genstate err"; st.textContent="Add a key in ⚙ Settings."; return; }
+    btn.disabled=true; st.className="genstate"; st.innerHTML=`<span class="spin"></span> organizing your week…`;
+    try{ await genWeeklyPlan(); st.textContent=""; btn.innerHTML="✨ Regenerate this week"; draw(); }
+    catch(err){ st.className="genstate err"; st.textContent=err.soft||"Try again."; } btn.disabled=false; };
+}
+
+/* ============ WEEKLY REVIEW ============ */
+function thisWeekDays(){ const mon=mondayOf(new Date()); const out=[]; for(let i=0;i<7;i++){ const d=new Date(mon); d.setDate(mon.getDate()+i); out.push(d.toISOString().slice(0,10)); } return out; }
+function weekAverages(){ const days=thisWeekDays(); let e=0,m=0,a=0,ec=0,mc=0,ac=0,logged=0;
+  days.forEach(k=>{ const o=store.daily[k]; if(!o)return; if(o.energy||o.mood||o.intention||o.note)logged++; if(o.energy){e+=o.energy;ec++;} if(o.mood){m+=o.mood;mc++;} if(o.alignment){a+=o.alignment;ac++;} });
+  return {logged, energy:ec?(e/ec).toFixed(1):"–", mood:mc?(m/mc).toFixed(1):"–", align:ac?(a/ac).toFixed(1):"–"}; }
+function renderReview(v){
+  v.innerHTML=`<h1>🔄 Weekly Review</h1><div class="sub">Look back, mark what happened, then roll it into next week.</div>`;
+  const wk=mondayOf(new Date()).toISOString().slice(0,10);
+  let rev=store.reviews.find(r=>r.weekStart===wk); if(!rev){ rev={weekStart:wk, done:{}, worked:"", change:"", summary:"", generatedAt:null}; store.reviews.unshift(rev); save(); }
+  const avg=weekAverages();
+  const stat=document.createElement("div"); stat.className="card";
+  stat.innerHTML=`<div class="blocklab">📊 This week's pulse</div><div style="display:flex;gap:22px;flex-wrap:wrap;font-size:14px">
+    <div><div style="font-size:22px;font-weight:700;color:var(--accent)">${avg.logged}</div><div style="color:var(--dim);font-size:12px">days logged</div></div>
+    <div><div style="font-size:22px;font-weight:700;color:var(--accent)">${avg.energy}</div><div style="color:var(--dim);font-size:12px">avg energy</div></div>
+    <div><div style="font-size:22px;font-weight:700;color:var(--accent)">${avg.mood}</div><div style="color:var(--dim);font-size:12px">avg mood</div></div>
+    <div><div style="font-size:22px;font-weight:700;color:var(--accent)">${avg.align}</div><div style="color:var(--dim);font-size:12px">avg alignment</div></div></div>`;
+  v.appendChild(stat);
+
+  const ex=document.createElement("div"); ex.className="card"; ex.innerHTML=`<div class="blocklab">✅ Did your experiments happen?</div>`;
+  let anyExp=false;
+  PILLARS.forEach(p=>{ const e=(store.exp[p.id]||"").trim(); if(!e)return; anyExp=true;
+    const line=document.createElement("div"); line.className="checkline"+(rev.done[p.id]?" done":""); line.style.marginBottom="9px";
+    line.innerHTML=`<span class="box">✓</span><span class="t">${p.emoji} ${escapeHtml(e)}</span>`;
+    line.onclick=()=>{ rev.done[p.id]=!rev.done[p.id]; save(); renderReview(v); }; ex.appendChild(line); });
+  if(!anyExp) ex.innerHTML+=`<div style="color:var(--faint);font-size:13px">No experiments set yet — add them in your pillars or the Operating Manual.</div>`;
+  v.appendChild(ex);
+
+  const notes=document.createElement("div"); notes.className="card"; notes.innerHTML=`<div class="blocklab">📝 Reflect</div>`;
+  const wsv=document.createElement("span"); wsv.className="saved"; wsv.textContent="saved ✓";
+  const wl=document.createElement("div"); wl.style.cssText="font-size:13px;color:var(--dim);margin-bottom:5px"; wl.textContent="What worked this week?";
+  const w1=ta(rev.worked,function(){ rev.worked=this.value; save(); flash(wsv); });
+  const cl=document.createElement("div"); cl.style.cssText="font-size:13px;color:var(--dim);margin:10px 0 5px"; cl.textContent="What will you change next week?";
+  const w2=ta(rev.change,function(){ rev.change=this.value; save(); });
+  notes.appendChild(wl); notes.appendChild(w1); notes.appendChild(wsv); notes.appendChild(cl); notes.appendChild(w2); v.appendChild(notes);
+
+  const gr=document.createElement("div"); gr.className="genrow";
+  const sb=document.createElement("button"); sb.className="genbtn gold"; sb.innerHTML="✨ Summarize my week";
+  const sst=document.createElement("span"); sst.className="genstate"; gr.appendChild(sb); gr.appendChild(sst); v.appendChild(gr);
+  const sumHolder=document.createElement("div"); if(rev.summary) sumHolder.innerHTML=`<div class="weeksummary">${escapeHtml(rev.summary)}</div>`; v.appendChild(sumHolder);
+  sb.onclick=async()=>{ if(!aiReady()){ sst.className="genstate err"; sst.textContent="Add a key in ⚙ Settings."; return; }
+    sb.disabled=true; sst.className="genstate"; sst.innerHTML=`<span class="spin"></span> …`;
+    try{ const done=PILLARS.filter(p=>rev.done[p.id]).length; const data=[
+        {question:"Days logged / avg energy / avg mood / avg alignment",answer:`${avg.logged} / ${avg.energy} / ${avg.mood} / ${avg.align}`},
+        {question:"Experiments completed",answer:String(done)},
+        {question:"What worked",answer:rev.worked||"(blank)"},
+        {question:"What to change",answer:rev.change||"(blank)"}];
+      const out=await ai("Summarize my week warmly, speaking to me as 'you', in 3-4 sentences: acknowledge the effort, note the trend honestly but kindly, and suggest one focus for next week. No lists.", data);
+      rev.summary=out; save(); sumHolder.innerHTML=`<div class="weeksummary">${escapeHtml(out)}</div>`; sst.textContent="";
+    }catch(err){ sst.className="genstate err"; sst.textContent=err.soft||"Try again."; } sb.disabled=false; };
+
+  const row=document.createElement("div"); row.className="rowbtns"; row.style.marginTop="18px";
+  const pn=document.createElement("button"); pn.className="btn primary"; pn.textContent="🗓️ Plan next week →"; pn.onclick=()=>go("week"); row.appendChild(pn); v.appendChild(row);
+}
+
+/* ============ JOURNAL ============ */
+function addJournal(type, text, pinned){ store.journal.unshift({id:Date.now()+"_"+Math.random().toString(36).slice(2,6), date:todayISO(), type:type||"note", text:text, pinned:!!pinned}); save(); }
+function renderJournal(v){
+  v.innerHTML=`<h1>📓 Journal</h1><div class="sub">Capture good days and honest notes. Pinned &amp; happy entries resurface on Today and inside Reset.</div>`;
+  const c=document.createElement("div"); c.className="card";
+  c.innerHTML=`<div class="blocklab">＋ New entry</div><div style="color:var(--dim);font-size:13px;margin-bottom:9px">A happy moment worth remembering, or a note to yourself.</div>`;
+  const txt=document.createElement("textarea"); txt.placeholder="What happened? How did it feel?"; txt.style.minHeight="80px"; c.appendChild(txt);
+  const row=document.createElement("div"); row.className="genrow"; row.style.marginTop="10px";
+  const happy=document.createElement("button"); happy.className="genbtn gold"; happy.textContent="🌤️ Save happy moment";
+  const note=document.createElement("button"); note.className="genbtn calm"; note.textContent="📝 Save note";
+  const jst=document.createElement("span"); jst.className="genstate"; row.appendChild(happy); row.appendChild(note); row.appendChild(jst); c.appendChild(row); v.appendChild(c);
+  happy.onclick=()=>{ if(txt.value.trim()){ addJournal("happy",txt.value.trim(),true); txt.value=""; renderJournal(v); } };
+  note.onclick=()=>{ if(txt.value.trim()){ addJournal("note",txt.value.trim(),false); txt.value=""; renderJournal(v); } };
+
+  if(!store.journal.length){ const e=document.createElement("div"); e.className="emptyhint"; e.textContent="No entries yet. Your happy moments will become the memories Reset calls back to."; v.appendChild(e); return; }
+  store.journal.forEach(j=>{ const card=document.createElement("div"); card.className="jentry";
+    const meta=document.createElement("div"); meta.className="meta";
+    meta.innerHTML=`<span class="jtype ${j.type}">${j.type==="happy"?"🌤️ happy":"📝 note"}</span><span class="dt">${j.date}</span>`;
+    const tools=document.createElement("div"); tools.className="tools";
+    const pin=document.createElement("button"); pin.className="ibtn"+(j.pinned?" pinned":""); pin.textContent=j.pinned?"📌":"📍"; pin.title="Pin (resurfaces in Reset/Today)";
+    pin.onclick=()=>{ j.pinned=!j.pinned; save(); renderJournal(v); };
+    const del=document.createElement("button"); del.className="ibtn"; del.textContent="🗑"; del.title="Delete";
+    del.onclick=()=>{ store.journal=store.journal.filter(x=>x.id!==j.id); save(); renderJournal(v); };
+    tools.appendChild(pin); tools.appendChild(del); meta.appendChild(tools); card.appendChild(meta);
+    const body=document.createElement("div"); body.className="jtxt"; body.textContent=j.text; card.appendChild(body); v.appendChild(card); });
+}
+
+/* ============ PROFILE INDEX + PILLARS ============ */
+function renderProfile(v){
+  v.innerHTML=`<h1>🧩 My Profile</h1>
+    <div style="font-size:18px;font-weight:600;color:var(--accent);margin:2px 0 4px">Are you really happy?</div>
+    <div class="sub">Know yourself — and be honest. 多研究你自己. This is your onboarding self-portrait: set it once, revisit when something genuinely shifts.</div>
+    <div class="heroquote">Go understand yourself. Truly understand yourself. This is a self-healing system: find what makes you happy, and if something really makes you happy, do it.<span class="by">— Heidi</span></div>
+    <div class="howto">🔒 <b>A journal that's truly yours.</b> Every answer is saved locally on this device only — no account, no server, no tracking. No one else can see it. <span style="color:var(--faint)">(One exception: if you turn on AI generation, that pillar's answers are sent directly to your AI provider to write that single output — see Settings.)</span><br><br><b>How it works:</b> answer honestly — messy is fine. Hit <b style="color:var(--accent)">✨ Generate</b> in each pillar to distil a core truth + a weekly experiment. Those feed your Mission, This-Week plan and daily prompts.</div>
+    <div class="grid" id="tiles"></div>`;
+  const g=v.querySelector("#tiles");
+  PILLARS.forEach(p=>{ const pr=pillarProgress(p); const t=document.createElement("div"); t.className="tile"; t.onclick=()=>go(p.id);
+    t.innerHTML=`<div class="te">${p.emoji}</div><div style="flex:1"><div class="tc">${p.cn}</div><div class="tt">${p.en}</div><div class="td">${p.intro}</div><div class="mini"><i style="width:${pr}%"></i></div></div>`; g.appendChild(t); });
+}
+function renderPillar(v,p){
+  const head=document.createElement("div");
+  head.innerHTML=`<div class="pillarhead"><div class="emoji">${p.emoji}</div><div><h1>${p.en}</h1><div class="cn">${p.cn}</div></div></div><div class="pillarintro">${p.intro}</div>`;
+  v.appendChild(head);
+  p.qs.forEach((q,i)=>{ const key=p.id+"_"+i; const box=document.createElement("div"); box.className="card q";
+    box.innerHTML=`<div class="qnum">Q${i+1}</div><div class="qen">${q.en}</div><div class="qcn">${q.cn}</div>`;
+    const sv=document.createElement("span"); sv.className="saved"; sv.textContent="saved ✓";
+    const t=ta(store.ans[key],function(){ store.ans[key]=this.value; save(); flash(sv); refreshNav(); }, "Type your answer… (saves automatically)");
+    box.appendChild(t); box.appendChild(sv); v.appendChild(box); });
+
+  const d=document.createElement("div"); d.className="distill";
+  d.innerHTML=`<div class="lab">🔑 Distill ${store.aiFlag[p.id+"_d"]?'<span class="aiflag">✨ AI-written</span>':''}</div><div class="hint">The core truth from your answers — generated for you, editable.</div>`;
+  const dgr=document.createElement("div"); dgr.className="genrow"; const db=document.createElement("button"); db.className="genbtn gold"; db.innerHTML="✨ "+((store.distill[p.id]||"").trim()?"Regenerate":"Generate from my answers"); const dst=document.createElement("span"); dst.className="genstate"; dgr.appendChild(db); dgr.appendChild(dst);
+  const dsv=document.createElement("span"); dsv.className="saved"; dsv.textContent="saved ✓";
+  const dt=ta(store.distill[p.id],function(){ store.distill[p.id]=this.value; store.aiFlag[p.id+"_d"]=false; save(); flash(dsv); refreshNav(); }, p.distillStem);
+  d.appendChild(dgr); d.appendChild(dt); d.appendChild(dsv); v.appendChild(d);
+
+  const e=document.createElement("div"); e.className="experiment";
+  e.innerHTML=`<div class="lab">⚡ This-week experiment ${store.aiFlag[p.id+"_e"]?'<span class="aiflag" style="color:var(--good)">✨ AI-written</span>':''}</div><div class="hint">A small, concrete action suggested for you. Edit freely.</div>`;
+  const egr=document.createElement("div"); egr.className="genrow"; const eb=document.createElement("button"); eb.className="genbtn green"; eb.innerHTML="✨ "+((store.exp[p.id]||"").trim()?"Regenerate":"Suggest an experiment"); const est=document.createElement("span"); est.className="genstate"; egr.appendChild(eb); egr.appendChild(est);
+  const esv=document.createElement("span"); esv.className="saved"; esv.textContent="saved ✓";
+  const et=ta(store.exp[p.id],function(){ store.exp[p.id]=this.value; store.aiFlag[p.id+"_e"]=false; save(); flash(esv); refreshNav(); }, p.expStem);
+  e.appendChild(egr); e.appendChild(et); e.appendChild(esv); v.appendChild(e);
+
+  function answersData(){ const out=[]; p.qs.forEach((q,i)=>{ const a=ansOf(p.id,i); if(a)out.push({question:q.en,answer:a}); }); return out; }
+  db.onclick=async()=>{ if(!aiReady()){ dst.className="genstate err"; dst.textContent="Add a key in ⚙ Settings."; return; }
+    if(!answersData().length){ dst.className="genstate err"; dst.textContent="Answer a question above first."; return; }
+    db.disabled=true; dst.className="genstate"; dst.innerHTML=`<span class="spin"></span> reading…`;
+    try{ const out=await ai(`Below are my answers in the pillar "${p.en}". Write exactly ONE warm, specific, first-person sentence capturing the core truth, in the spirit of "${p.distillStem}". Return only the sentence.`, answersData());
+      dt.value=out; store.distill[p.id]=out; store.aiFlag[p.id+"_d"]=true; save(); dst.textContent=""; flash(dsv); refreshNav(); db.innerHTML="✨ Regenerate"; d.querySelector(".lab").innerHTML=`🔑 Distill <span class="aiflag">✨ AI-written</span>`;
+    }catch(err){ dst.className="genstate err"; dst.textContent=err.soft||"Try again."; } db.disabled=false; };
+  eb.onclick=async()=>{ if(!aiReady()){ est.className="genstate err"; est.textContent="Add a key in ⚙ Settings."; return; }
+    eb.disabled=true; est.className="genstate"; est.innerHTML=`<span class="spin"></span> …`;
+    try{ const data=answersData(); const tr=(store.distill[p.id]||"").trim(); if(tr)data.push({question:"My insight",answer:tr});
+      const out=await ai(`Based on my answers in "${p.en}", suggest ONE small, concrete, realistic action I can take THIS WEEK. Specific (a when or how), first person, max 2 sentences. Return only the action.`, data);
+      et.value=out; store.exp[p.id]=out; store.aiFlag[p.id+"_e"]=true; save(); est.textContent=""; flash(esv); refreshNav(); eb.innerHTML="✨ Regenerate"; e.querySelector(".lab").innerHTML=`⚡ This-week experiment <span class="aiflag" style="color:var(--good)">✨ AI-written</span>`;
+    }catch(err){ est.className="genstate err"; est.textContent=err.soft||"Try again."; } eb.disabled=false; };
+
+  const idx=PILLARS.findIndex(x=>x.id===p.id); const pn=document.createElement("div"); pn.className="pillarnav";
+  const prev=document.createElement("button"); prev.className="btn ghost"; prev.textContent="← Previous"; prev.disabled=idx===0; prev.onclick=()=>go(idx===0?"profile":PILLARS[idx-1].id);
+  const next=document.createElement("button"); next.className="btn primary"; next.textContent= idx===PILLARS.length-1?"See my Manual →":"Next pillar →"; next.onclick=()=>go(idx===PILLARS.length-1?"manual":PILLARS[idx+1].id);
+  pn.appendChild(prev); pn.appendChild(next); v.appendChild(pn);
+}
+
+/* ============ MANUAL ============ */
+function renderManual(v){
+  v.innerHTML=`<h1>📖 Operating Manual</h1><div class="sub">Every distilled truth + experiment in one place. Your map.</div>`;
+  const banner=document.createElement("div"); banner.className="northstar"; banner.style.marginBottom="16px";
+  banner.innerHTML=`<div class="lab">✨ Generate everything</div><div style="color:var(--dim);font-size:13px;margin-bottom:10px">Reads your answers across every pillar and fills in any missing truths + experiments.</div>`;
+  const grow=document.createElement("div"); grow.className="genrow"; const gallbtn=document.createElement("button"); gallbtn.className="genbtn gold"; gallbtn.innerHTML="✨ Generate from my answers"; const gallst=document.createElement("span"); gallst.className="genstate"; grow.appendChild(gallbtn); grow.appendChild(gallst); banner.appendChild(grow); v.appendChild(banner);
+  const cards=document.createElement("div"); v.appendChild(cards);
+  function drawCards(){ cards.innerHTML=""; let any=false;
+    PILLARS.forEach(p=>{ const truth=(store.distill[p.id]||"").trim(), act=(store.exp[p.id]||"").trim(); if(truth||act)any=true;
+      const c=document.createElement("div"); c.className="mancard";
+      c.innerHTML=`<h3>${p.emoji} ${p.en} <span class="cn">${p.cn}</span></h3><div class="truth ${truth?'':'empty'}">${truth?escapeHtml(truth):"— not distilled yet —"}</div><div class="act ${act?'':'empty'}">${act?escapeHtml(act):"no experiment set yet"}</div>`; cards.appendChild(c); });
+    if(!any){ const e=document.createElement("div"); e.className="emptyhint"; e.textContent="Answer some pillar questions, then generate."; cards.appendChild(e); } }
+  drawCards();
+  gallbtn.onclick=async()=>{ if(!aiReady()){ gallst.className="genstate err"; gallst.textContent="Add a key in ⚙ Settings."; return; }
+    const todo=PILLARS.filter(p=>{ let has=false; p.qs.forEach((q,i)=>{ if(ansOf(p.id,i))has=true; }); return has; });
+    if(!todo.length){ gallst.className="genstate err"; gallst.textContent="Answer some questions first."; return; }
+    gallbtn.disabled=true; let i=0;
+    for(const p of todo){ i++; gallst.className="genstate"; gallst.innerHTML=`<span class="spin"></span> ${p.emoji} ${p.en} (${i}/${todo.length})…`;
+      const data=[]; p.qs.forEach((q,qi)=>{ const a=ansOf(p.id,qi); if(a)data.push({question:q.en,answer:a}); });
+      try{ if(!(store.distill[p.id]||"").trim()){ store.distill[p.id]=await ai(`Below are my answers in "${p.en}". Write ONE warm, specific, first-person sentence capturing the core truth. Return only the sentence.`, data); store.aiFlag[p.id+"_d"]=true; save(); }
+        if(!(store.exp[p.id]||"").trim()){ const d2=data.slice(); if(store.distill[p.id])d2.push({question:"My insight",answer:store.distill[p.id]}); store.exp[p.id]=await ai(`Based on my answers in "${p.en}", suggest ONE small concrete action this week. First person, max 2 sentences. Return only the action.`, d2); store.aiFlag[p.id+"_e"]=true; save(); }
+        drawCards(); refreshNav(); }catch(err){} }
+    gallst.className="genstate"; gallst.textContent="Done ✓"; gallbtn.disabled=false; };
+  const acts=document.createElement("div"); acts.className="manactions";
+  const ms=document.createElement("button"); ms.className="btn primary"; ms.textContent="⭐ Build my Mission →"; ms.onclick=()=>go("mission");
+  const wk=document.createElement("button"); wk.className="btn"; wk.textContent="🗓️ Plan my week →"; wk.onclick=()=>go("week");
+  const exp=document.createElement("button"); exp.className="btn"; exp.textContent="⬇ Export Markdown"; exp.onclick=exportMd;
+  const reset=document.createElement("button"); reset.className="btn ghost"; reset.textContent="Reset all data"; reset.onclick=()=>{ if(confirm("Erase everything on this device? Can't be undone.")){ const k=store.apiKey,md=store.model,wa=store.waNumber; store=blank(); store.apiKey=k; store.model=md; store.waNumber=wa; save(); go("profile"); } };
+  acts.appendChild(ms); acts.appendChild(wk); acts.appendChild(exp); acts.appendChild(reset); v.appendChild(acts);
+}
+
+/* ============ HISTORY ============ */
+function fmtDate(iso){ const d=new Date(iso+"T00:00:00"); return d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric',year:'numeric'}); }
+function renderHistory(v){
+  v.innerHTML=`<h1>🕘 History</h1><div class="sub">Your journal over time — every day you logged, kept and yours.</div>`;
+  const dates=Object.keys(store.daily).filter(k=>{ const o=store.daily[k]; return o&&(o.energy||o.mood||o.alignment||o.intention||o.win||o.drain||o.note||(o.reset&&o.reset.step)); }).sort().reverse();
+  const stat=document.createElement("div"); stat.className="card";
+  stat.innerHTML=`<div class="blocklab">📊 Lifetime</div><div style="display:flex;gap:22px;flex-wrap:wrap;font-size:14px">
+    <div><div style="font-size:22px;font-weight:700;color:var(--accent)">${dates.length}</div><div style="color:var(--dim);font-size:12px">days logged</div></div>
+    <div><div style="font-size:22px;font-weight:700;color:var(--accent)">${streak()}</div><div style="color:var(--dim);font-size:12px">current streak</div></div>
+    <div><div style="font-size:22px;font-weight:700;color:var(--accent)">${store.journal.length}</div><div style="color:var(--dim);font-size:12px">journal entries</div></div>
+    <div><div style="font-size:22px;font-weight:700;color:var(--accent)">${store.reviews.filter(r=>r.summary).length}</div><div style="color:var(--dim);font-size:12px">weekly reviews</div></div></div>`;
+  v.appendChild(stat);
+  if(!dates.length){ const e=document.createElement("div"); e.className="emptyhint"; e.textContent="No daily entries yet. Your Today check-ins appear here as a timeline you can scroll back through."; v.appendChild(e); }
+  else { const h=document.createElement("div"); h.className="sech"; h.textContent="📅 Daily timeline"; v.appendChild(h);
+    dates.forEach(k=>{ const o=store.daily[k]; const c=document.createElement("div"); c.className="card"; c.style.marginBottom="11px";
+      let bits=[]; if(o.energy)bits.push("⚡"+o.energy); if(o.mood)bits.push("🌊"+o.mood); if(o.alignment)bits.push("🎯"+o.alignment);
+      let html=`<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px"><div style="font-weight:600;font-size:14px">${fmtDate(k)}</div><div style="font-family:var(--mono);font-size:12px;color:var(--dim)">${bits.join("  ")}</div></div>`;
+      if(o.intention)html+=`<div style="font-size:13.5px;margin:4px 0"><span style="color:var(--accent)">🌅</span> ${escapeHtml(o.intention)} ${o.intentionDone?'<span style="color:var(--good)">✓</span>':''}</div>`;
+      if(o.win)html+=`<div style="font-size:13px;color:var(--dim);margin:3px 0">🏆 ${escapeHtml(o.win)}</div>`;
+      if(o.note)html+=`<div style="font-size:13px;color:var(--dim);margin:3px 0">🪞 ${escapeHtml(o.note)}</div>`;
+      if(o.reset&&o.reset.step)html+=`<div style="font-size:13px;color:var(--calm);margin:3px 0">🌿 ${escapeHtml(o.reset.step)}</div>`;
+      c.innerHTML=html; v.appendChild(c); }); }
+  const revs=store.reviews.filter(r=>r.summary||r.worked||r.change);
+  if(revs.length){ const h=document.createElement("div"); h.className="sech"; h.textContent="🔄 Past weekly reviews"; v.appendChild(h);
+    revs.forEach(r=>{ const c=document.createElement("div"); c.className="card"; c.style.marginBottom="11px";
+      let html=`<div style="font-weight:600;font-size:13.5px;margin-bottom:5px">Week of ${fmtDate(r.weekStart)}</div>`;
+      if(r.summary)html+=`<div style="font-size:13.5px;margin-bottom:5px">${escapeHtml(r.summary)}</div>`;
+      if(r.worked)html+=`<div style="font-size:13px;color:var(--dim)">✓ Worked: ${escapeHtml(r.worked)}</div>`;
+      if(r.change)html+=`<div style="font-size:13px;color:var(--dim)">→ Change: ${escapeHtml(r.change)}</div>`;
+      c.innerHTML=html; v.appendChild(c); }); }
+}
+
+/* ============ BACKUP / RESTORE ============ */
+function exportBackup(){
+  const data=Object.assign({}, store); delete data.apiKey;
+  data._app="KnowYourselfOS"; data._backupAt=new Date().toISOString(); data._ver=1;
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="KYO-backup-"+todayISO()+".json"; a.click();
+  store.lastBackup=new Date().toISOString(); save();
+}
+function importBackup(file, cb){
+  const r=new FileReader();
+  r.onload=()=>{ try{ const p=JSON.parse(r.result); const key=store.apiKey, model=store.model, wa=store.waNumber;
+    delete p._app; delete p._backupAt; delete p._ver;
+    store=normalize(p); if(!store.apiKey)store.apiKey=key; if(!store.model)store.model=model; if(!store.waNumber)store.waNumber=wa; save(); cb&&cb(true);
+  }catch(e){ cb&&cb(false); } };
+  r.readAsText(file);
+}
+
+/* ============ SETTINGS ============ */
+function renderSettings(v){
+  v.innerHTML=`<h1>⚙️ AI Settings</h1><div class="sub">How the ✨ Generate buttons reach Claude.</div>`;
+  const m=aiMode();
+  const status=document.createElement("div"); status.className="card";
+  status.innerHTML=`<div style="font-size:14px;line-height:1.6">${ m==="cowork"?"✅ <b>Running inside Cowork.</b> Generation works automatically.": m==="key"?"✅ <b>API key saved.</b> Generation is live in this standalone file.":"⚠️ <b>AI is off.</b> Add an Anthropic API key below (for the standalone file) or open inside Cowork."}</div>`;
+  v.appendChild(status);
+  const card=document.createElement("div"); card.className="card";
+  card.innerHTML=`<div style="font-weight:600;margin-bottom:6px">Anthropic API key</div><div style="color:var(--dim);font-size:12.5px;margin-bottom:12px;line-height:1.55">Stored <b>only on this device</b> and sent <b>directly</b> to Anthropic from your browser. Get one at <span style="color:var(--accent)">console.anthropic.com</span>. (For personal/local use — don't embed a key in a public website.)</div>`;
+  const keyIn=document.createElement("input"); keyIn.type="password"; keyIn.value=store.apiKey||""; keyIn.placeholder="sk-ant-…"; keyIn.style.fontFamily="var(--mono)"; keyIn.style.marginBottom="12px"; card.appendChild(keyIn);
+  const modLab=document.createElement("div"); modLab.style.cssText="font-weight:600;font-size:13px;margin-bottom:6px"; modLab.textContent="Model"; card.appendChild(modLab);
+  const modSel=document.createElement("select"); modSel.style.cssText="width:100%;margin-bottom:14px";
+  [["claude-haiku-4-5-20251001","Haiku 4.5 — fastest & cheapest (recommended)"],["claude-sonnet-4-6","Sonnet 4.6 — more nuanced"],["claude-opus-4-8","Opus 4.8 — deepest, pricier"]].forEach(([val,lab])=>{ const o=document.createElement("option"); o.value=val; o.textContent=lab; if((store.model||"claude-haiku-4-5-20251001")===val)o.selected=true; modSel.appendChild(o); });
+  card.appendChild(modSel);
+  const waLab=document.createElement("div"); waLab.style.cssText="font-weight:600;font-size:13px;margin-bottom:6px"; waLab.textContent="Default WhatsApp number (optional)"; card.appendChild(waLab);
+  const waHint=document.createElement("div"); waHint.style.cssText="color:var(--dim);font-size:12.5px;margin-bottom:8px"; waHint.textContent="Country code + number, digits only (e.g. 31612345678). The This-Week “Send to WhatsApp” button opens a chat to this number pre-filled."; card.appendChild(waHint);
+  const waIn=document.createElement("input"); waIn.type="text"; waIn.value=store.waNumber||""; waIn.placeholder="31612345678"; waIn.style.fontFamily="var(--mono)"; waIn.style.marginBottom="14px"; card.appendChild(waIn);
+  const row=document.createElement("div"); row.className="genrow";
+  const saveBtn=document.createElement("button"); saveBtn.className="btn primary"; saveBtn.textContent="Save";
+  const testBtn=document.createElement("button"); testBtn.className="btn"; testBtn.textContent="Test connection";
+  const clrBtn=document.createElement("button"); clrBtn.className="btn ghost"; clrBtn.textContent="Clear key";
+  const st=document.createElement("span"); st.className="genstate"; row.appendChild(saveBtn); row.appendChild(testBtn); row.appendChild(clrBtn); row.appendChild(st); card.appendChild(row); v.appendChild(card);
+
+  // Backups & history
+  const bk=document.createElement("div"); bk.className="card";
+  bk.innerHTML=`<div style="font-weight:600;margin-bottom:6px">💾 Backups &amp; history</div><div style="color:var(--dim);font-size:12.5px;margin-bottom:12px;line-height:1.55">Your journal lives only in this browser. Download a backup file regularly — and before clearing your browser or switching machines. Restore it anytime. ${store.lastBackup?("Last backup: <b>"+new Date(store.lastBackup).toLocaleString()+"</b>."):"<b>No backup yet.</b>"}</div>`;
+  const brow=document.createElement("div"); brow.className="genrow";
+  const expb=document.createElement("button"); expb.className="btn primary"; expb.textContent="⬇ Back up all data (.json)"; expb.onclick=()=>{ exportBackup(); renderSettings(v); };
+  const impb=document.createElement("button"); impb.className="btn"; impb.textContent="⬆ Restore from backup";
+  const fin=document.createElement("input"); fin.type="file"; fin.accept="application/json,.json"; fin.style.display="none";
+  const bst=document.createElement("span"); bst.className="genstate";
+  impb.onclick=()=>fin.click();
+  fin.onchange=()=>{ if(fin.files&&fin.files[0]){ if(confirm("Restore replaces your current data on this device with the backup. Continue?")){ importBackup(fin.files[0],ok=>{ if(ok){ renderNav(); go("history"); } else { bst.className="genstate err"; bst.textContent="Couldn't read that file."; } }); } } };
+  brow.appendChild(expb); brow.appendChild(impb); brow.appendChild(bst); bk.appendChild(brow); bk.appendChild(fin); v.appendChild(bk);
+
+  saveBtn.onclick=()=>{ store.apiKey=keyIn.value.trim(); store.model=modSel.value; store.waNumber=waIn.value.replace(/[^0-9]/g,""); save(); st.className="genstate"; st.textContent="Saved ✓"; renderNav(); };
+  clrBtn.onclick=()=>{ store.apiKey=""; save(); keyIn.value=""; st.className="genstate"; st.textContent="Cleared"; renderNav(); };
+  testBtn.onclick=async()=>{ store.apiKey=keyIn.value.trim(); store.model=modSel.value; save(); renderNav();
+    if(!aiReady()){ st.className="genstate err"; st.textContent="Enter a key first."; return; }
+    testBtn.disabled=true; st.className="genstate"; st.innerHTML=`<span class="spin"></span> testing…`;
+    try{ const r=await ai("Reply with exactly the word: connected", []); st.className="genstate"; st.textContent=/connect/i.test(r)?"Connection works ✓":("Reply: "+r.slice(0,40)); }
+    catch(err){ st.className="genstate err"; st.textContent=err.soft||"Test failed."; } testBtn.disabled=false; };
+}
+
+/* ============ EXPORT ============ */
+function escapeHtml(s){ return String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])); }
+function exportMd(){
+  let md=`# My Operating Manual — Know Yourself OS\n\n_Exported ${todayISO()} · ${overallProgress()}% profile_\n\n`;
+  if(store.mission&&store.mission.statement){ md+=`## ⭐ North Star\n${store.mission.statement}\n\n`; (store.mission.principles||[]).forEach(p=>md+=`- ${p}\n`); md+=`\n`; }
+  md+=`> "Go understand yourself. Truly understand yourself." — Heidi\n\n---\n\n`;
+  PILLARS.forEach(p=>{ md+=`## ${p.emoji} ${p.en} (${p.cn})\n\n`;
+    p.qs.forEach((q,i)=>{ const a=ansOf(p.id,i); if(a)md+=`**${q.en}**\n${a}\n\n`; });
+    const t=(store.distill[p.id]||"").trim(), e=(store.exp[p.id]||"").trim();
+    if(t)md+=`🔑 **Truth:** ${t}\n\n`; if(e)md+=`⚡ **Experiment:** ${e}\n\n`; md+=`\n`; });
+  const blob=new Blob([md],{type:"text/markdown"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="My-Operating-Manual.md"; a.click();
+}
+
+/* ============ STORAGE HEALTH WARNING ============ */
+const STORAGE_OK=(function(){ try{ localStorage.setItem("__kyo_test","1"); localStorage.removeItem("__kyo_test"); return true; }catch(e){ return false; } })();
+function storageWarning(){
+  if(STORAGE_OK) return;
+  const main=document.querySelector(".main"); if(!main) return;
+  const b=document.createElement("div");
+  b.style.cssText="background:#3a1414;border:1px solid #e0735e;color:#ffd9cf;padding:14px 18px;border-radius:12px;margin-bottom:16px;font-size:14px;line-height:1.55";
+  b.innerHTML="⚠️ <b>This browser isn't saving your data.</b> Local storage is blocked — this happens when you open the file directly (especially in Safari) or in a private window. Anything you type here will be lost on reload.<br><br>Fix: open KYO in <b>Chrome or Firefox</b>, or deploy it and use the <b>https://</b> URL (see DEPLOY.md). Storage works perfectly on a normal hosted URL.";
+  main.insertBefore(b, document.getElementById("view"));
+}
+
+renderNav(); renderView(); storageWarning();
+</script>
+</body>
+</html>
